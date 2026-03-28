@@ -1,7 +1,8 @@
 import { useState } from "react";
-import CafeInfo from "./components/CafeInfo/CafeInfo";
-import VoteOptions from "./components/VoteOptions/VoteOptions";
-
+import CafeInfo from "./Components/CafeInfo/CafeInfo";
+import VoteOptions from "./Components/VoteOptions/VoteOptions";
+import VoteStats from "./Components/VoteStats/VoteStats";
+import Notification from "./Components/Notification/Notification";
 import type { Votes, VoteType } from "./types/votes";
 
 import css from "./App.module.css";
@@ -16,19 +17,28 @@ export default function App() {
 
   const [votes, setVotes] = useState<Votes>(initialVotesState);
 
-  const handleVote =(voteType: VoteType) =>{
+  const handleVote = (voteType: VoteType) => {
     setVotes(prevVotes => ({
       ...prevVotes,
       [voteType]: prevVotes[voteType] + 1
     }));
   }
 
-const  resetVotes =()=>{};
+  const resetVotes = () => { };
+  const totalVotes = votes.good + votes.neutral + votes.bad;
+  const positiveRate = totalVotes
+    ? Math.round((votes.good / totalVotes) * 100) :
+    0;
 
   return (
     <div className={css.app}>
       <CafeInfo />
-      <VoteOptions onVote={handleVote} onReset={resetVotes} canReset={true} />
+      <VoteOptions onVote={handleVote} onReset={resetVotes} canReset={totalVotes>0} />
+      {totalVotes > 0 ? (<VoteStats votes={votes} totalVotes={totalVotes} positiveRate={positiveRate} />) 
+      : <Notification />}
+
     </div>
   )
 }
+
+
