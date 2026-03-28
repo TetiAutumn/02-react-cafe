@@ -24,7 +24,7 @@ export default function App() {
     }));
   }
 
-  const resetVotes = () => { };
+  const resetVotes = () => {setVotes(initialVotesState)};
   const totalVotes = votes.good + votes.neutral + votes.bad;
   const positiveRate = totalVotes
     ? Math.round((votes.good / totalVotes) * 100) :
